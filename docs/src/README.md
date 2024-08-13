@@ -55,12 +55,18 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-Soho is an orderbook protocol to facilitate high-frequency trades on multiple chains including Blast.
+Caster is a general purpose, on-chain, merkle tree based voting protocol which also supports fractional vote delegation. Users can create voting campaigns in a permissionless manner by supplying a merkle root and the campaign params, and paying a fee of `0.001 ether`. Voting campaigns can be single option (rhetorical questions), or multiple option voting campaigns (select from an array of options). Whitelisted users eligible to vote in a campaign can mint themselves a unique voting id (Caster Nft) by verifying themselves as a part of the merkle tree. This Nft provides the voters with the voting power assigned by the campaign creator.
+
+Voters can delegate their votes to a single user or multiple users (fractional vote delegation). By default, votes are delegated to the voter itself and once the voter delegates to another user, they cannot be recovered.
+
+Campaigns run for a finite duration (less than 365 days, which is the max duration). At the end of each campaign, the result can be obtained using `CasterCampaign::getResultSingleOption()` or `CasterCampaign::getResultMultipleOption()` depending on the campaign type.
 
 ### Built With
 
 - ![Foundry](https://img.shields.io/badge/-FOUNDRY-%23323330.svg?style=for-the-badge)
 - ![Solidity](https://img.shields.io/badge/Solidity-%23363636.svg?style=for-the-badge&logo=solidity&logoColor=white)
+- ![NodeJS](https://img.shields.io/badge/node.js-6DA55F?style=for-the-badge&logo=node.js&logoColor=white)
+- ![PNPM](https://img.shields.io/badge/pnpm-%234a4a4a.svg?style=for-the-badge&logo=pnpm&logoColor=f69220)
 
 
 <!-- GETTING STARTED -->
@@ -68,21 +74,22 @@ Soho is an orderbook protocol to facilitate high-frequency trades on multiple ch
 
 ### Prerequisites
 
-Make sure you have git and foundry installed and configured on your system.
+Make sure you have git, node.js, and pnpm installed and configured on your system.
 
 ### Installation
 
 Clone the repo,
 
 ```shell
-git clone https://github.com/mgnfy-view/soho-orderbook.git
+git clone https://github.com/mgnfy-view/caster.git
 ```
 
 cd into the repo, and install the necessary dependencies
 
 ```shell
-cd soho-orderbook
+cd caster
 forge test
+pnpm intall
 ```
 
 That's it, you are good to go now!
@@ -96,7 +103,7 @@ That's it, you are good to go now!
 - [x] Write Docs
 - [x] Write a good README.md
 
-See the [open issues](https://github.com/mgnfy-view/soho-orderbook/issues) for a full list of proposed features (and known issues).
+See the [open issues](https://github.com/mgnfy-view/caster/issues) for a full list of proposed features (and known issues).
 
 
 <!-- CONTRIBUTING -->
@@ -130,14 +137,14 @@ Here's a gateway to all my socials, don't forget to hit me up!
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
-[contributors-shield]: https://img.shields.io/github/contributors/mgnfy-view/soho-orderbook.svg?style=for-the-badge
-[contributors-url]: https://github.com/mgnfy-view/soho-orderbook/graphs/contributors
-[forks-shield]: https://img.shields.io/github/forks/mgnfy-view/soho-orderbook.svg?style=for-the-badge
-[forks-url]: https://github.com/mgnfy-view/soho-orderbook/network/members
-[stars-shield]: https://img.shields.io/github/stars/mgnfy-view/soho-orderbook.svg?style=for-the-badge
-[stars-url]: https://github.com/mgnfy-view/soho-orderbook/stargazers
-[issues-shield]: https://img.shields.io/github/issues/mgnfy-view/soho-orderbook.svg?style=for-the-badge
-[issues-url]: https://github.com/mgnfy-view/soho-orderbook/issues
-[license-shield]: https://img.shields.io/github/license/mgnfy-view/soho-orderbook.svg?style=for-the-badge
-[license-url]: https://github.com/mgnfy-view/soho-orderbook/blob/master/LICENSE.txt
+[contributors-shield]: https://img.shields.io/github/contributors/mgnfy-view/caster.svg?style=for-the-badge
+[contributors-url]: https://github.com/mgnfy-view/caster/graphs/contributors
+[forks-shield]: https://img.shields.io/github/forks/mgnfy-view/caster.svg?style=for-the-badge
+[forks-url]: https://github.com/mgnfy-view/caster/network/members
+[stars-shield]: https://img.shields.io/github/stars/mgnfy-view/caster.svg?style=for-the-badge
+[stars-url]: https://github.com/mgnfy-view/caster/stargazers
+[issues-shield]: https://img.shields.io/github/issues/mgnfy-view/caster.svg?style=for-the-badge
+[issues-url]: https://github.com/mgnfy-view/caster/issues
+[license-shield]: https://img.shields.io/github/license/mgnfy-view/caster.svg?style=for-the-badge
+[license-url]: https://github.com/mgnfy-view/caster/blob/master/LICENSE.txt
 [linktree-url]: https://linktr.ee/mgnfy.view
