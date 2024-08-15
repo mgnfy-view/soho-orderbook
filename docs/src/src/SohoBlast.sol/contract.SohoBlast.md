@@ -1,5 +1,5 @@
 # SohoBlast
-[Git Source](https://github.com/mgnfy-view/soho-orderbook/blob/b0de44209c38bec76a892649fa8f58821082ae7c/src/SohoBlast.sol)
+[Git Source](https://github.com/mgnfy-view/soho-orderbook/blob/b350bfaab71abb17c2012b562288a1838b48b478/src/SohoBlast.sol)
 
 **Inherits:**
 [Soho](/src/Soho.sol/contract.Soho.md)

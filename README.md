@@ -55,7 +55,13 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-Soho is an orderbook protocol to facilitate high-frequency trades on multiple chains including Blast.
+Soho is a central limit orderbook protocol to facilitate high-frequency, gasless trades on multiple chains including Blast.
+
+The protocol consists of three main actors: a maker, a taker, and an off-chain matching engine. Users can start placing ask/sell orders on the off-chain engine after they have deposited some tokens into the on-chain settlement protocol. An ask order brings liquidity to the market, whereas a sell order takes liquidity from the market. Makers and takers can sign their respective orders off-chain. Once a mirrored maker and taker order is matched, the matching engine settles it on-chain using the `Soho::settleOrders()` function and the maker and taker signatures. The protocol takes a small percentage of fees from the taker's input amount, so it is necessary that takers put up some buffer amount to have their orders matched.
+
+The protocol uses bitmaps to efficiently track the resolution status of an order, and EIP712 signatures to sign orders.
+
+The protocol can be deployed on multiple evm-compatible chains, and is also configured for Blast.
 
 ### Built With
 
