@@ -60,7 +60,7 @@ contract SohoTest is Helper {
     }
 
     function testSettleOrders() public {
-        Soho.Matching memory matching = _createOrdersAndMatching(user1, user2);
+        Soho.Matching memory matching = _createOrdersAndMatching(user1, user2, block.timestamp);
 
         uint256 user1TokenABalanceBefore = soho.getUserBalance(user1, address(tokenA));
         uint256 user1TokenBBalanceBefore = soho.getUserBalance(user1, address(tokenB));
@@ -108,7 +108,8 @@ contract SohoTest is Helper {
             inputAmount
         );
 
-        Soho.Matching memory matching = _createMatching(makerOrder, takerOrder, makerSignature, takerSignature);
+        Soho.Matching memory matching =
+            _createMatching(makerOrder, takerOrder, makerSignature, takerSignature, block.timestamp);
 
         vm.startPrank(engine);
         vm.expectEmit(true, true, true, true);
@@ -118,21 +119,34 @@ contract SohoTest is Helper {
     }
 
     function testOnlyEngineCanSettleOrders() public {
-        Soho.Matching memory matching = _createOrdersAndMatching(user1, user2);
+        Soho.Matching memory matching = _createOrdersAndMatching(user1, user2, block.timestamp);
 
         vm.expectRevert(Soho__NotEngine.selector);
         soho.settleOrders(matching);
     }
 
+    function testSettleOrdersFailsDueToPassedDeadline() public {
+        uint256 warpBy = 1 minutes;
+        vm.warp(block.timestamp + warpBy);
+        uint256 deadline = block.timestamp - 1;
+
+        Soho.Matching memory matching = _createOrdersAndMatching(address(0), user2, deadline);
+
+        vm.startPrank(engine);
+        vm.expectRevert(Soho__DeadlinePassed.selector);
+        soho.settleOrders(matching);
+        vm.stopPrank();
+    }
+
     function testSettleOrdersFailsDueToAddressZeroCreator() public {
-        Soho.Matching memory matching = _createOrdersAndMatching(address(0), user2);
+        Soho.Matching memory matching = _createOrdersAndMatching(address(0), user2, block.timestamp);
 
         vm.startPrank(engine);
         vm.expectRevert(Soho__AddressZero.selector);
         soho.settleOrders(matching);
         vm.stopPrank();
 
-        matching = _createOrdersAndMatching(user1, address(0));
+        matching = _createOrdersAndMatching(user1, address(0), block.timestamp);
 
         vm.startPrank(engine);
         vm.expectRevert(Soho__AddressZero.selector);
@@ -166,7 +180,8 @@ contract SohoTest is Helper {
             inputAmount
         );
 
-        Soho.Matching memory matching = _createMatching(makerOrder, takerOrder, makerSignature, takerSignature);
+        Soho.Matching memory matching =
+            _createMatching(makerOrder, takerOrder, makerSignature, takerSignature, block.timestamp);
 
         vm.startPrank(engine);
         vm.expectRevert(Soho__IncorrectChains.selector);
@@ -200,7 +215,8 @@ contract SohoTest is Helper {
             inputAmount
         );
 
-        Soho.Matching memory matching = _createMatching(makerOrder, takerOrder, makerSignature, takerSignature);
+        Soho.Matching memory matching =
+            _createMatching(makerOrder, takerOrder, makerSignature, takerSignature, block.timestamp);
 
         vm.startPrank(engine);
         vm.expectRevert(Soho__NotTargetChain.selector);
@@ -236,7 +252,8 @@ contract SohoTest is Helper {
             inputAmount
         );
 
-        Soho.Matching memory matching = _createMatching(makerOrder, takerOrder, makerSignature, takerSignature);
+        Soho.Matching memory matching =
+            _createMatching(makerOrder, takerOrder, makerSignature, takerSignature, block.timestamp);
 
         vm.startPrank(engine);
         vm.expectRevert(Soho__TradeNotStartedYet.selector);
@@ -272,7 +289,8 @@ contract SohoTest is Helper {
             inputAmount
         );
 
-        Soho.Matching memory matching = _createMatching(makerOrder, takerOrder, makerSignature, takerSignature);
+        Soho.Matching memory matching =
+            _createMatching(makerOrder, takerOrder, makerSignature, takerSignature, block.timestamp);
 
         vm.startPrank(engine);
         vm.expectRevert(Soho__TradeNotStartedYet.selector);
@@ -308,7 +326,8 @@ contract SohoTest is Helper {
             inputAmount
         );
 
-        Soho.Matching memory matching = _createMatching(makerOrder, takerOrder, makerSignature, takerSignature);
+        Soho.Matching memory matching =
+            _createMatching(makerOrder, takerOrder, makerSignature, takerSignature, block.timestamp);
 
         vm.startPrank(engine);
         vm.expectRevert(Soho__DeadlinePassed.selector);
@@ -344,7 +363,8 @@ contract SohoTest is Helper {
             inputAmount
         );
 
-        Soho.Matching memory matching = _createMatching(makerOrder, takerOrder, makerSignature, takerSignature);
+        Soho.Matching memory matching =
+            _createMatching(makerOrder, takerOrder, makerSignature, takerSignature, block.timestamp);
 
         vm.startPrank(engine);
         vm.expectRevert(Soho__NotCorrectSettler.selector);
@@ -378,7 +398,8 @@ contract SohoTest is Helper {
             inputAmount
         );
 
-        Soho.Matching memory matching = _createMatching(makerOrder, takerOrder, makerSignature, takerSignature);
+        Soho.Matching memory matching =
+            _createMatching(makerOrder, takerOrder, makerSignature, takerSignature, block.timestamp);
 
         vm.startPrank(engine);
         vm.expectRevert(Soho__InvalidTokens.selector);
@@ -414,7 +435,8 @@ contract SohoTest is Helper {
             inputAmount
         );
 
-        Soho.Matching memory matching = _createMatching(makerOrder, takerOrder, makerSignature, takerSignature);
+        Soho.Matching memory matching =
+            _createMatching(makerOrder, takerOrder, makerSignature, takerSignature, block.timestamp);
 
         vm.startPrank(engine);
         vm.expectRevert(Soho__InsufficientMakerInputAmount.selector);
@@ -448,7 +470,8 @@ contract SohoTest is Helper {
             inputAmount
         );
 
-        Soho.Matching memory matching = _createMatching(makerOrder, takerOrder, makerSignature, takerSignature);
+        Soho.Matching memory matching =
+            _createMatching(makerOrder, takerOrder, makerSignature, takerSignature, block.timestamp);
 
         vm.startPrank(engine);
         vm.expectRevert(Soho__InsufficientTakerInputAmount.selector);
@@ -482,7 +505,8 @@ contract SohoTest is Helper {
             inputAmount
         );
 
-        Soho.Matching memory matching = _createMatching(makerOrder, takerOrder, makerSignature, takerSignature);
+        Soho.Matching memory matching =
+            _createMatching(makerOrder, takerOrder, makerSignature, takerSignature, block.timestamp);
 
         vm.startPrank(user1);
         soho.incrementCounter();
@@ -520,7 +544,8 @@ contract SohoTest is Helper {
             inputAmount
         );
 
-        Soho.Matching memory matching = _createMatching(makerOrder, takerOrder, makerSignature, takerSignature);
+        Soho.Matching memory matching =
+            _createMatching(makerOrder, takerOrder, makerSignature, takerSignature, block.timestamp);
 
         vm.startPrank(engine);
         soho.settleOrders(matching);
@@ -555,7 +580,8 @@ contract SohoTest is Helper {
             inputAmount
         );
 
-        Soho.Matching memory matching = _createMatching(makerOrder, takerOrder, makerSignature, makerSignature);
+        Soho.Matching memory matching =
+            _createMatching(makerOrder, takerOrder, makerSignature, makerSignature, block.timestamp);
 
         vm.startPrank(engine);
         vm.expectRevert(Soho__InvalidSignature.selector);
@@ -615,7 +641,7 @@ contract SohoTest is Helper {
     }
 
     function testGetOrderStatus() public {
-        Soho.Matching memory matching = _createOrdersAndMatching(user1, user2);
+        Soho.Matching memory matching = _createOrdersAndMatching(user1, user2, block.timestamp);
 
         vm.startPrank(engine);
         soho.settleOrders(matching);

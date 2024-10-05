@@ -25,6 +25,7 @@ contract Soho is Ownable2Step, EIP712 {
         uint256 inputAmount;
         address outputToken;
         uint256 outputAmount;
+        uint256 salt;
     }
 
     struct Matching {
@@ -32,6 +33,7 @@ contract Soho is Ownable2Step, EIP712 {
         Order takerOrder;
         bytes makerSignature;
         bytes takerSignature;
+        uint256 deadline;
     }
 
     address private immutable i_engine;
@@ -49,12 +51,12 @@ contract Soho is Ownable2Step, EIP712 {
     event CounterIncremented(address indexed by, uint256 indexed value);
     event TradingFeeChanged(uint256 indexed newTradingFeeBPS);
 
+    error Soho__DeadlinePassed();
     error Soho__NotEngine();
     error Soho__AddressZero();
     error Soho__IncorrectChains();
     error Soho__NotTargetChain();
     error Soho__TradeNotStartedYet();
-    error Soho__DeadlinePassed();
     error Soho__NotCorrectSettler();
     error Soho__InvalidTokens();
     error Soho__InsufficientMakerInputAmount();
@@ -105,6 +107,8 @@ contract Soho is Ownable2Step, EIP712 {
      * and taker signatures.
      */
     function settleOrders(Matching calldata _matching) external onlyEngine {
+        if (_matching.deadline < block.timestamp) revert Soho__DeadlinePassed();
+
         if (_matching.makerOrder.creator == address(0) || _matching.takerOrder.creator == address(0)) {
             revert Soho__AddressZero();
         }
@@ -266,7 +270,8 @@ contract Soho is Ownable2Step, EIP712 {
                     _order.inputToken,
                     _order.inputAmount,
                     _order.outputToken,
-                    _order.outputAmount
+                    _order.outputAmount,
+                    _order.salt
                 )
             )
         );

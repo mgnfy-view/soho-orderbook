@@ -63,7 +63,8 @@ abstract contract Helper is Test, EventsAndErrors {
 
     function _createOrdersAndMatching(
         address _maker,
-        address _taker
+        address _taker,
+        uint256 _deadline
     )
         internal
         view
@@ -71,14 +72,15 @@ abstract contract Helper is Test, EventsAndErrors {
     {
         (Soho.Order memory makerOrder, bytes memory makerSignature) = _createMakerOrder(_maker);
         (Soho.Order memory takerOrder, bytes memory takerSignature) = _createTakerOrder(_taker);
-        _matching = _createMatching(makerOrder, takerOrder, makerSignature, takerSignature);
+        _matching = _createMatching(makerOrder, takerOrder, makerSignature, takerSignature, _deadline);
     }
 
     function _createMatching(
         Soho.Order memory _makerOrder,
         Soho.Order memory _takerOrder,
         bytes memory _makerSignature,
-        bytes memory _takerSignature
+        bytes memory _takerSignature,
+        uint256 _deadline
     )
         internal
         pure
@@ -88,7 +90,8 @@ abstract contract Helper is Test, EventsAndErrors {
             makerOrder: _makerOrder,
             takerOrder: _takerOrder,
             makerSignature: _makerSignature,
-            takerSignature: _takerSignature
+            takerSignature: _takerSignature,
+            deadline: _deadline
         });
     }
 
@@ -160,7 +163,8 @@ abstract contract Helper is Test, EventsAndErrors {
             inputToken: _inputToken,
             inputAmount: _inputAmount,
             outputToken: _outputToken,
-            outputAmount: _outputAmount
+            outputAmount: _outputAmount,
+            salt: 1
         });
 
         bytes32 hash = soho.getOrderStructHash(_order);
